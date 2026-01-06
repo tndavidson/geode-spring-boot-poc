@@ -1,0 +1,22 @@
+spring:
+  application.name: geode-spring-boot-poc
+  main.allow-bean-definition-overriding: true
+
+management.endpoints:
+  web:
+    exposure:
+      include: "*"
+  health:
+    show-details: always
+
+server.port: 8081
+
+spring.data.geode:
+  cache:
+    pdx:
+      read-serialized: false
+      persistent: false
+
+logging:
+  level:
+    com.github.tndavidson: debug
