@@ -4,6 +4,7 @@ import com.github.tndavidson.geodespringbootpoc.model.Customer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
+import org.springframework.data.gemfire.config.annotation.EnableContinuousQueries;
 import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnableStatistics;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
@@ -24,9 +25,10 @@ import org.springframework.data.gemfire.repository.config.EnableGemfireRepositor
  */
 @SpringBootApplication
 @EnableEntityDefinedRegions(basePackageClasses = {Customer.class})
-@ClientCacheApplication
+@ClientCacheApplication(subscriptionEnabled = true)
 @EnableGemfireRepositories(basePackages = "com.github.tndavidson.geodespringbootpoc.repository")
 @EnableStatistics
+@EnableContinuousQueries
 public class GeodeSpringBootPocApplication {
 
     public static void main(String[] args) {

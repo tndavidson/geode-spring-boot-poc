@@ -1,5 +1,6 @@
-package com.github.tndavidson.geodespringbootpoc.repository;
+package com.github.tndavidson.geodespringbootpoc.processor.impl;
 
+import com.github.tndavidson.geodespringbootpoc.repository.CustomerRepository;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

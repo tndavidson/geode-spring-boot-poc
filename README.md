@@ -5,7 +5,8 @@ This project is a Proof of Concept (POC) demonstrating the integration of **Spri
 ## Features
 
 - **Spring Data Geode Integration**: Configures a Spring Boot application as an Apache Geode `ClientCache` application.
-- **RESTful API**: Provides endpoints for CRUD operations on Customer entities.
+- **RESTful API**: Provides endpoints for CRUD operations on Customer, Account, and Transaction entities.
+- **Continuous Query**: Automatically recalculates account balances whenever a new transaction is processed.
 - **Entity-Defined Regions**: Automatically creates Geode regions based on domain model annotations.
 - **PDX Serialization**: Configures reflection-based PDX serialization for efficient data handling in Geode.
 - **Behavior-Driven Development (BDD)**: Uses Cucumber for integration testing of the REST API.
@@ -45,6 +46,8 @@ $ gfsh
 gfsh> start locator
 gfsh> start server
 gfsh> create region --name=customer --type=REPLICATE
+gfsh> create region --name=account --type=REPLICATE
+gfsh> create region --name=transaction --type=REPLICATE
 ```
 
 If you want the ability to run OQL queries in the `gfsh` shell, you will need to build the project and deploy the models jar to the Geode cluster.
@@ -71,6 +74,8 @@ The server will start on port `8081` (as configured in `application.yml`). Navig
 
 ## REST API Endpoints
 
+### Customer API
+
 The `CustomerRestController` provides the following endpoints under the `/customer` base path:
 
 | Method | Endpoint                                         | Description                                                                                              |
@@ -79,6 +84,17 @@ The `CustomerRestController` provides the following endpoints under the `/custom
 | `GET`  | `/customer/{id}`                                 | Retrieve a specific customer by ID.                                                                      |
 | `POST` | `/customer`                                      | Create a new customer.                                                                                   |
 | `POST` | `/customer/generate-fake-data/{numberOfRecords}` | Generate and save a specified number of fake customers.                                                  |
+
+### Account and Transaction API
+
+The `AccountRestController` provides the following endpoints:
+
+| Method | Endpoint                     | Description                                            |
+|--------|------------------------------|--------------------------------------------------------|
+| `GET`  | `/account/{accountId}`       | Retrieve a specific account by ID.                     |
+| `POST` | `/account`                   | Create a new account.                                  |
+| `GET`  | `/transaction/{transactionId}`| Retrieve a specific transaction by ID.                 |
+| `POST` | `/transaction`               | Create a new transaction.                              |
 
 ## Configuration
 
