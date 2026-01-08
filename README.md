@@ -1,6 +1,6 @@
 # Geode Spring Boot POC
 
-This project is a Proof of Concept (POC) demonstrating the integration of **Spring Boot** with **Apache Geode** (using Spring Data Geode). It provides a simple RESTful service to manage `Customer` data, which is persisted in an Apache Geode cache.
+This project is a Proof of Concept (POC) demonstrating the integration of **Spring Boot** with **Apache Geode** (using Spring Data Geode). It provides a simple RESTful service to manage `Customer`, `Account`, and `Transaction` data, which is persisted in an Apache Geode cache.
 
 ## Features
 
