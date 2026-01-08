@@ -2,6 +2,7 @@ package com.github.tndavidson.geodespringbootpoc.feature.stepdef;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 /**
  * Configuration class used for integrating Cucumber with Spring in a test context.
@@ -17,5 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// FIXME I added this DC because the continuous query in TransactionPostProcessor kept trying to register in each test,
+// which was causing an exception. This is a workaround to ensure the CQ is cleaned up after each test. Not ideal to
+// spin up a new context for every test, so I need to find a way to manually clean up the CQ after each test.
+@DirtiesContext
 public class CucumberSpringConfiguration {
 }

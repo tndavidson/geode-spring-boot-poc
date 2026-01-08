@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 /**
  * Implementation of the {@link TransactionPostProcessor} interface that processes
  * new transaction events received from a continuous query.
- *
+ * <p>
  * This class listens to events associated with transactions that have not
  * been cleared and triggers the recalculation of the account balance to ensure
  * consistency after processing the transaction.
- *
+ * <p>
  * The continuous query is configured to monitor the transaction region and select
  * transactions where the `isCleared` property is false.
- *
+ * <p>
  * Component annotation allows it to be detected and managed as a Spring component.
  */
 @Component
@@ -40,11 +40,12 @@ public class TransactionPostProcessorImpl implements TransactionPostProcessor {
      * @param event the continuous query event containing information about the new transaction.
      *              The event provides access to the transaction object and its relevant details.
      */
-    @ContinuousQuery(name = "TransactionHandler", query = "select * from /transaction t where t.isCleared() = false")
+    @ContinuousQuery(query = "select * from /transaction t where t.isCleared() = false")
     public void processNewTransaction(CqEvent event) {
         LOGGER.debug("TransactionHandler processed event: {}", event);
 
-        var transaction = (Transaction)event.getNewValue();
+        var transaction = (Transaction) event.getNewValue();
         accountProcessor.recalculateBalance(transaction.getAccountId());
     }
+
 }

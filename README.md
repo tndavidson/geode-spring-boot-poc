@@ -7,7 +7,8 @@ This project is a Proof of Concept (POC) demonstrating the integration of **Spri
 - **Spring Data Geode Integration**: Configures a Spring Boot application as an Apache Geode `ClientCache` application.
 - **RESTful API**: Provides endpoints for CRUD operations on Customer, Account, and Transaction entities.
 - **Continuous Query**: Automatically recalculates account balances whenever a new transaction is processed.
-- **Entity-Defined Regions**: Automatically creates Geode regions based on domain model annotations.
+- **Server-Side Function Execution**: Demonstrates executing custom logic on Geode servers for efficient data processing (e.g., retrieving deposit history across multiple accounts).
+- **Entity-Based Regions**: Maps domain models to Geode regions using annotations, simplifying data access and repository configuration.
 - **PDX Serialization**: Configures reflection-based PDX serialization for efficient data handling in Geode.
 - **Behavior-Driven Development (BDD)**: Uses Cucumber for integration testing of the REST API.
 
@@ -15,7 +16,7 @@ This project is a Proof of Concept (POC) demonstrating the integration of **Spri
 
 The project is organized into two modules:
 
-- **`geocode-spring-boot-poc-models`**: Contains the shared domain models (e.g., `Customer`). These are built as their own jar, for deploying to Geode.
+- **`geocode-spring-boot-poc-models`**: Contains the shared domain models (e.g., `Customer`) and server-side function implementations. These are built as their own jar, for deploying to Geode.
 - **`geocode-spring-boot-poc-server`**: The main Spring Boot application containing the REST controllers, repositories, and Geode configuration.
 
 ## Technologies Used
@@ -33,7 +34,7 @@ The project is organized into two modules:
 ### Prerequisites
 
 - JDK 17 or higher
-- A running Apache Geode cluster if not running in local/embedded mode (the current configuration is set up as a `ClientCache`).
+- A running Apache Geode cluster (the current configuration is set up as a `ClientCache`).
 
 ### Running Apache Geode
 
@@ -50,7 +51,7 @@ gfsh> create region --name=account --type=REPLICATE
 gfsh> create region --name=transaction --type=REPLICATE
 ```
 
-If you want the ability to run OQL queries in the `gfsh` shell, you will need to build the project and deploy the models jar to the Geode cluster.
+To enable OQL queries against the domain objects and to register server-side functions, you will need to build the project and deploy the models jar to the Geode cluster.
 
 From project root:
 
@@ -62,6 +63,23 @@ From project root:
 gfsh> deploy --jar="<path-to-project-root>/geocode-spring-boot-poc-models/build/libs/geocode-spring-boot-poc-models-0.0.1-SNAPSHOT.jar"
 ```
 
+Once deployed, the `DEPOSIT_HISTORY_SERVER_SIDE_FUNCTION` will be available for execution.
+
+To confirm this setup worked correctly, run these commands (your Member name will be different in the output)
+
+```bash
+gfsh>list regions
+List of regions
+---------------
+account
+customer
+transaction
+
+gfsh>list functions
+     Member      | Function
+---------------- | ------------------------------------
+yawn-helpful-can | DEPOSIT_HISTORY_SERVER_SIDE_FUNCTION
+```
 ### Running the Application
 
 To start the server:
@@ -84,6 +102,7 @@ The `CustomerRestController` provides the following endpoints under the `/custom
 | `GET`  | `/customer/{id}`                                 | Retrieve a specific customer by ID.                                                                      |
 | `POST` | `/customer`                                      | Create a new customer.                                                                                   |
 | `POST` | `/customer/generate-fake-data/{numberOfRecords}` | Generate and save a specified number of fake customers.                                                  |
+| `GET`  | `/customer/{id}/deposit-history-all-accounts`    | Retrieve deposit history across all accounts for a specific customer using a server-side Geode function. |
 
 ### Account and Transaction API
 
