@@ -1,4 +1,6 @@
-Feature: Customer region tests
+Feature: This set of tests demonstrates basic object cacheing using spring-boot and Geode.
+  It takes advantage of spring's local embedded Geode environment mocking capability, allowing for integration testing
+  with the JPA repositories.
 
   Background:
     Given the following entries exists in the "customer" region
